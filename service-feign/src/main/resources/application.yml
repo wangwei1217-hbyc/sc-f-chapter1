@@ -1,0 +1,20 @@
+server:
+  port: 8765
+spring:
+  application:
+    name: service-feign
+  cloud:
+    client:
+      ipAddress: 127.0.0.1
+
+eureka:
+  client:
+    service-url:
+       defaultZone: http://localhost:8761/eureka/
+  instance:
+      prefer-ip-address: true
+      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
+feign:
+  hystrix:
+    enabled: true
