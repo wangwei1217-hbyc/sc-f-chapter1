@@ -17,7 +17,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/wangwei1217-hbyc/SpringcloudConfig
+          uri: https://github.com/wangwei1217-hbyc/SpringcloudConfig/
           search-paths: repo
 
       label: master
