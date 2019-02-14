@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: 10761
 
 #高可用的服务注册中心
 #Eureka通过运行多个实例，使其更具有高可用性。事实上，这是它默认的熟性，你需要做的就是给对等的实例一个合法的关联serviceurl。
@@ -17,17 +17,17 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
-    hostname: peer1
+    hostname: peer3
     instance-id: ${eureka.instance.hostname}:${server.port}
   client:
     register-with-eureka: false # 不向注册中心注册自己
     fetch-registry: false  # 不检索服务
     service-url:
-      defaultZone: http://peer2:9761/eureka/,http://peer3:10761/eureka/   # 指定另一个实例的地址
+      defaultZone: http://peer1:8761/eureka/,http://peer2:9761/eureka/   # 指定另一个实例的地址
 
 spring:
   application:
     name: eurka-server
   profiles:
-    active: peer1
+    active: peer3
 
