@@ -6,8 +6,29 @@ spring:
   cloud:
     client:
       ipAddress: 127.0.0.1
+
+#  ------服务链路追踪(Spring Cloud Sleuth)：主要讲述服务追踪组件zipkin，Spring Cloud Sleuth集成了zipkin组件
+#微服务架构上通过业务来划分服务的，通过REST调用，对外暴露的一个接口，可能需要很多个服务协同才能完成这个接口功能，
+#如果链路上任何一个服务出现问题或者网络超时，都会形成导致接口调用失败。随着业务的不断扩张，服务之间互相调用会越来越复杂
+#
+#案例主要有三个工程组成:一个server-zipkin,它的主要作用使用ZipkinServer 的功能，收集调用数据，并展示；
+#一个service-hi,对外暴露hi接口；
+#一个service-miya,对外暴露miya接口；
+#这两个service可以相互调用；并且只有调用了，server-zipkin才会收集数据的，这就是为什么叫服务追踪了。
+#在spring Cloud为F版本的时候，已经不需要自己构建Zipkin Server了，只需要下载jar即可，
+#
+#下载地址：
+#https://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/
+#运行jar：java -jar zipkin-server-2.10.1-exec.jar  访问浏览器localhost:9411
+
+#通过引入spring-cloud-starter-zipkin依赖和设置spring.zipkin.base-url就可以了
+#还需要注入Sampler对象
+#    @Bean
+#    public Sampler defaultSampler() {
+#        return Sampler.ALWAYS_SAMPLE;
+#    }
   zipkin:
-    base-url: http://localhost:9411
+    base-url: http://localhost:9411  # 指定zipkin server的地址
 eureka:
   client:
     service-url:
@@ -16,3 +37,13 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
+## 这一块配置必须加上,否则 http://localhost:8763/actuator/hystrix.stream 连不上
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"

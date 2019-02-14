@@ -1,5 +1,6 @@
 package io.spring.eureka.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +22,12 @@ public class ServiceHiController {
     private RestTemplate restTemplate;
 
     @GetMapping(value = "/home")
+    /**
+     * 在程序中声明断路点HystrixCommand
+     */
+    @HystrixCommand(fallbackMethod = "hiError")
     public String home(@RequestParam(name = "name",defaultValue = "forezp") String name){
-        return "hi " + name + " ,i am from port:" + port;
+        return "service-hi,【 " + name + "】 ,i am from port:" + port;
     }
 
     @GetMapping(value = "/hi")
@@ -36,6 +41,9 @@ public class ServiceHiController {
         log.info("calling trace service-hi ");
 
         return "i'm service-hi";
+    }
 
+    public String hiError(String name){
+        return "service-hi,【"+name+"】,sorry,error!";
     }
 }

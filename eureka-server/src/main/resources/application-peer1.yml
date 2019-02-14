@@ -1,6 +1,19 @@
 server:
   port: 8761
 
+#高可用的服务注册中心
+#Eureka通过运行多个实例，使其更具有高可用性。事实上，这是它默认的熟性，你需要做的就是给对等的实例一个合法的关联serviceurl。
+#windows电脑，在c:/windows/systems/drivers/etc/hosts 修改hosts文件，
+#这时需要改造下service-hi，
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://peer1:8761/eureka/
+
+#依次启动两个eureka-server两个实例，service-hi
+#访问：localhost:8761和访问：localhost:9761  会发现都注册了service-hi
+#localhost:8761 里面有个peer2节点，localhost:9761里面有个peer1节点
+#client只向8761注册，但是你打开9761，你也会发现，9761也有 client的注册信息
 eureka:
   instance:
     prefer-ip-address: true
@@ -10,7 +23,7 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://peer2:9761/eureka/
+      defaultZone: http://peer2:9761/eureka/   # 指定另一个实例的地址
 
 spring:
   application:

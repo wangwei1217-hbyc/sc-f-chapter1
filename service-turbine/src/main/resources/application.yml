@@ -1,13 +1,11 @@
 server:
-  port: 8989
+  port: 10000
 spring:
   application:
-    name: service-miya
+    name: service-turbine
   cloud:
     client:
       ipAddress: 127.0.0.1
-  zipkin:
-    base-url: http://localhost:9411
 eureka:
   client:
     service-url:
@@ -17,7 +15,7 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 
-## 这一块配置必须加上,否则 http://localhost:8989/actuator/hystrix.stream 连不上
+## 这一块配置必须加上,否则 http://localhost:10000/actuator/hystrix.stream 连不上
 management:
   endpoints:
     web:
@@ -26,3 +24,11 @@ management:
       cors:
         allowed-origins: "*"
         allowed-methods: "*"
+turbine:
+  app-config: service-hi,service-miya
+  aggregator:
+    cluster-config: default
+  cluster-name-expression: new String("default")
+  combine-host-port: true
+  instanceUrlSuffix:
+      default: actuator/hystrix.stream

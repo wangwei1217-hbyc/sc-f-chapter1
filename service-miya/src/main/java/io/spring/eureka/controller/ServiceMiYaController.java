@@ -1,5 +1,6 @@
 package io.spring.eureka.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +21,9 @@ public class ServiceMiYaController {
     private RestTemplate restTemplate;
 
     @GetMapping(value = "/home")
+    @HystrixCommand(fallbackMethod = "miyaError")
     public String home(@RequestParam(name = "name",defaultValue = "forezp") String name){
-        return "hi " + name + " ,i am from port:" + port;
+        return "service-miya,【 " + name + " 】,i am from port:" + port;
     }
 
     @GetMapping(value = "/hi")
@@ -36,5 +38,9 @@ public class ServiceMiYaController {
 
         return restTemplate.getForObject("http://localhost:8763/info",String.class);
 
+    }
+
+    public String miyaError(String name){
+        return "service-miya【"+name+"】,sorry,error!";
     }
 }
